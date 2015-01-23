@@ -13,7 +13,7 @@ import sys
 
 from characteristic import attributes
 
-from ._base import Effect, guard, _Box, NoPerformerFoundError
+from ._base import Effect, ExcInfo, guard, _Box, NoPerformerFoundError
 from ._sync import NotSynchronousError
 from ._intents import Constant, Error, Func, ParallelEffects
 
@@ -103,7 +103,7 @@ def fail_effect(effect, exception):
     try:
         raise exception
     except:
-        return resolve_effect(effect, sys.exc_info(), is_error=True)
+        return resolve_effect(effect, ExcInfo.from_context(), is_error=True)
 
 
 def resolve_stub(dispatcher, effect):

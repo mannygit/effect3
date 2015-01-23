@@ -3,9 +3,10 @@ from __future__ import print_function, absolute_import
 import traceback
 
 from testtools import TestCase
-from testtools.matchers import MatchesException, MatchesListwise
+from testtools.matchers import MatchesListwise
 
 from ._base import Effect, NoPerformerFoundError, perform
+from ._test_utils import MatchesException
 
 
 def func_dispatcher(intent):
@@ -144,7 +145,7 @@ class EffectPerformTests(TestCase):
                 .on(success=calls.append))
         self.assertEqual(calls, ["dispatched"])
 
-    def test_callback_sucecss_exception(self):
+    def test_callback_success_exception(self):
         """
         If a success callback raises an error, the exception is passed to the
         error callback.

@@ -3,8 +3,7 @@ Tests for the effect.testing module.
 """
 
 from testtools import TestCase
-from testtools.matchers import (MatchesListwise, Equals, MatchesException,
-                                raises)
+from testtools.matchers import MatchesListwise, Equals, raises
 
 from . import (
     Constant,
@@ -18,6 +17,7 @@ from .testing import (
     fail_effect,
     resolve_effect,
     resolve_stubs)
+from ._test_utils import MatchesException
 
 
 class ResolveEffectTests(TestCase):

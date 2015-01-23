@@ -61,5 +61,5 @@ def sync_performer(f):
         try:
             box.succeed(f(*pass_args))
         except:
-            box.fail(sys.exc_info())
+            box.fail_from_context()
     return sync_wrapper

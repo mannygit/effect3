@@ -4,14 +4,14 @@ from functools import partial
 import sys
 
 from testtools import TestCase
-from testtools.matchers import MatchesListwise, Equals, MatchesException
+from testtools.matchers import MatchesListwise, Equals
 
 from twisted.trial.unittest import SynchronousTestCase
 from twisted.internet.defer import Deferred
 from twisted.internet.task import Clock
 from twisted.python.failure import Failure
 
-from ._base import Effect
+from ._base import Effect, ExcInfo
 from ._intents import (
     Constant,
     Delay,
@@ -25,6 +25,7 @@ from .twisted import (
     perform)
 
 from .test_base import func_dispatcher
+from ._test_utils import MatchesException
 
 
 def _dispatcher(reactor):
@@ -210,13 +211,13 @@ class ExcInfoToFailureTests(TestCase):
 
     def test_exc_info_to_failure(self):
         """
-        :func:`exc_info_to_failure` converts an exc_info tuple to a
+        :func:`exc_info_to_failure` converts an :obj:`ExcInfo` to a
         :obj:`Failure`.
         """
         try:
             raise RuntimeError("foo")
         except:
-            exc_info = sys.exc_info()
+            exc_info = ExcInfo.from_context()
 
         failure = exc_info_to_failure(exc_info)
         self.assertIs(failure.type, RuntimeError)

@@ -1,6 +1,7 @@
 # -*- test-case-name: effect.test_base -*-
 from __future__ import print_function, absolute_import
 
+import traceback
 import sys
 
 from functools import partial
@@ -38,7 +39,7 @@ class Effect(object):
         callbacks added afterwards will receive the result of the previous
         callback. Normal return values are passed on to the next ``success``
         callback, and exceptions are passed to the next ``error`` callback
-        as a ``sys.exc_info()`` tuple.
+        as a :obj:`ExcInfo`.
 
         If a callback returns an :obj:`Effect`, the result of that
         :obj:`Effect` will be passed to the next callback.
@@ -67,7 +68,12 @@ class _Box(object):
         """
         Indicate that the effect has failed. result must be an exc_info tuple.
         """
+        if type(result) is tuple:
+            result = ExcInfo(result)
         self._cont((True, result))
+
+    def fail_from_context(self):
+        self._cont((True, ExcInfo.from_context()))
 
 
 def guard(f, *args, **kwargs):
@@ -75,12 +81,12 @@ def guard(f, *args, **kwargs):
     Run a function.
 
     Return (is_error, result), where is_error is a boolean indicating whether
-    it raised an exception. In that case result will be ``sys.exc_info()``.
+    it raised an exception. In that case result will be an :obj:`ExcInfo`.
     """
     try:
         return (False, f(*args, **kwargs))
     except:
-        return (True, sys.exc_info())
+        return (True, ExcInfo.from_context())
 
 
 class NoPerformerFoundError(Exception):
@@ -145,7 +151,37 @@ def perform(dispatcher, effect):
                     _Box(partial(bouncer.bounce,
                                  _run_callbacks, effect.callbacks)))
         except:
-            e = sys.exc_info()
+            e = ExcInfo.from_context()
             _run_callbacks(bouncer, effect.callbacks, (True, e))
 
     trampoline(_perform, effect)
+
+
+class ExcInfo(tuple):
+    """
+    An object that's somewhat better than a sys.exc_info tuple.
+    """
+    def __init__(self, tup):
+        super(ExcInfo, self).__init__(tup)
+        self.type = tup[0]
+        self.value = tup[1]
+        self.tb = tup[2]
+
+    @classmethod
+    def from_context(klass):
+        """
+        Construct an :obj:`ExcInfo` from the current exception info, as returned
+        from ``sys.exc_info()``.
+        """
+        return klass(sys.exc_info())
+
+    def print_tb(self):
+        """Print this traceback to ``sys.stdout``."""
+        traceback.print_exception(*self)
+
+    def as_string(self):
+        """Return the traceback as a string."""
+        return '\n'.join(traceback.format_exception(*self))
+
+    def __repr__(self):
+        return "ExcInfo(%s)" % (super(ExcInfo, self).__repr__())

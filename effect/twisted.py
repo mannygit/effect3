@@ -23,7 +23,7 @@ from twisted.python.failure import Failure
 from twisted.internet.task import deferLater
 
 from ._intents import Delay, ParallelEffects
-from ._base import perform as base_perform
+from ._base import ExcInfo, perform as base_perform
 from ._dispatcher import TypeDispatcher
 from ._utils import wraps
 
@@ -69,7 +69,7 @@ def deferred_performer(f):
         try:
             result = f(*pass_args)
         except:
-            box.fail(sys.exc_info())
+            box.fail_from_context()
         else:
             if isinstance(result, Deferred):
                 deferred_to_box(result, box)
