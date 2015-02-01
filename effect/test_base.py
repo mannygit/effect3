@@ -5,7 +5,7 @@ import traceback
 from testtools import TestCase
 from testtools.matchers import MatchesListwise
 
-from ._base import Effect, NoPerformerFoundError, perform
+from ._base import Effect, ExcInfo, NoPerformerFoundError, perform
 from ._test_utils import MatchesException
 
 
@@ -292,3 +292,16 @@ class EffectPerformTests(TestCase):
 
 def raise_(e):
     raise e
+
+
+def get_exception():
+    try:
+        1 / 0
+    except:
+        return ExcInfo.from_context()
+
+
+class ExcInfoTests(TestCase):
+    def test_log(self):
+        exc = get_exception()
+        exc.log('foo')

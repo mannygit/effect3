@@ -1,8 +1,11 @@
 # -*- test-case-name: effect.test_base -*-
 from __future__ import print_function, absolute_import
 
+import logging
 import traceback
 import sys
+
+import six
 
 from functools import partial
 
@@ -73,6 +76,16 @@ class _Box(object):
         self._cont((True, result))
 
     def fail_from_context(self):
+        """
+        Indicate that the effect has failed, and get the error information from
+        the interpreter context. Call this function from within an except:
+        handler, like so::
+
+            try:
+                ...
+            except Exception:
+                box.fail_from_context()
+        """
         self._cont((True, ExcInfo.from_context()))
 
 
@@ -172,6 +185,9 @@ class ExcInfo(tuple):
     def tb(self):
         return self[2]
 
+    def reraise(self):
+        six.reraise(*self)
+
     @classmethod
     def from_context(klass):
         """
@@ -181,7 +197,7 @@ class ExcInfo(tuple):
         return klass(sys.exc_info())
 
     def print_tb(self, file=None):
-        """Print this traceback to ``sys.stdout``."""
+        """Print this traceback to a file -- ``sys.stderr`` by default."""
         traceback.print_exception(*self, file=file)
 
     def as_string(self):
@@ -189,4 +205,17 @@ class ExcInfo(tuple):
         return '\n'.join(traceback.format_exception(*self))
 
     def __repr__(self):
-        return "ExcInfo(%s)" % (super(ExcInfo, self).__repr__())
+        return "<ExcInfo %r>" % (self.value,)
+
+    def log(self, *args, **kwargs):
+        """
+        Write this error to the standard python logging module.
+
+        :param logger: The logger to emit the log event to. Defaults to the
+            root logger.
+        :param *args: passed through to logger.error.
+        :param **kwargs: passed through to logger.error.
+        """
+        logger = kwargs.pop('logger', logging)
+        kwargs['exc_info'] = self
+        logger.error(*args, **kwargs)

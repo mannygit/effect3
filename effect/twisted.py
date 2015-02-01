@@ -101,4 +101,4 @@ def perform(dispatcher, effect):
 
 def exc_info_to_failure(exc_info):
     """Convert an exc_info tuple to a :class:`Failure`."""
-    return Failure(exc_info[1], exc_info[0], exc_info[2])
+    return Failure(exc_info.value, exc_info.type, exc_info.tb)
