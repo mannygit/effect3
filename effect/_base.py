@@ -158,14 +158,19 @@ def perform(dispatcher, effect):
 
 
 class ExcInfo(tuple):
-    """
-    An object that's somewhat better than a sys.exc_info tuple.
-    """
-    def __init__(self, tup):
-        super(ExcInfo, self).__init__(tup)
-        self.type = tup[0]
-        self.value = tup[1]
-        self.tb = tup[2]
+    """An object that's somewhat better than a sys.exc_info tuple."""
+
+    @property
+    def type(self):
+        return self[0]
+
+    @property
+    def value(self):
+        return self[1]
+
+    @property
+    def tb(self):
+        return self[2]
 
     @classmethod
     def from_context(klass):
@@ -175,9 +180,9 @@ class ExcInfo(tuple):
         """
         return klass(sys.exc_info())
 
-    def print_tb(self):
+    def print_tb(self, file=None):
         """Print this traceback to ``sys.stdout``."""
-        traceback.print_exception(*self)
+        traceback.print_exception(*self, file=file)
 
     def as_string(self):
         """Return the traceback as a string."""
