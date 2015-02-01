@@ -9,7 +9,7 @@ See https://effect.readthedocs.org/ for documentation.
 
 from __future__ import absolute_import
 
-from ._base import Effect, perform, NoPerformerFoundError
+from ._base import Effect, ExcInfo, NoPerformerFoundError, perform
 from ._sync import NotSynchronousError, sync_perform, sync_performer
 from ._intents import (
     Delay, ParallelEffects, parallel,
@@ -19,7 +19,7 @@ from ._dispatcher import ComposedDispatcher, TypeDispatcher
 
 
 __all__ = [
-    "Effect", "perform", "NoPerformerFoundError",
+    "Effect", "ExcInfo", "perform", "NoPerformerFoundError",
     "NotSynchronousError", "sync_perform", "sync_performer",
     "Delay", "ParallelEffects", "parallel",
     "Constant", "Error", "FirstError", "Func",

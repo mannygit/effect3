@@ -1,7 +1,6 @@
 from __future__ import absolute_import
 
 from functools import partial
-import sys
 
 from testtools import TestCase
 from testtools.matchers import MatchesListwise, Equals

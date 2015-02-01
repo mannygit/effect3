@@ -170,8 +170,8 @@ class ExcInfo(tuple):
     @classmethod
     def from_context(klass):
         """
-        Construct an :obj:`ExcInfo` from the current exception info, as returned
-        from ``sys.exc_info()``.
+        Construct an :obj:`ExcInfo` from the current exception info, as
+        returned from ``sys.exc_info()``.
         """
         return klass(sys.exc_info())
 

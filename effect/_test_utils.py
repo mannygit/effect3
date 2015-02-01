@@ -4,7 +4,7 @@ import traceback
 
 from characteristic import attributes
 
-from testtools.matchers import Equals, MatchesException
+from testtools.matchers import Equals, MatchesException, Mismatch
 
 
 class MatchesException(MatchesException):
@@ -24,8 +24,8 @@ class MatchesException(MatchesException):
             return Mismatch('%r is not a %r' % (other[0], expected_class))
         if self._is_instance:
             if other[1].args != self.expected.args:
-                return Mismatch('%s has different arguments to %s.' % (
-                        _error_repr(other[1]), _error_repr(self.expected)))
+                return Mismatch('%r has different arguments to %r.' % (
+                    other[1], self.expected))
         elif self.value_re is not None:
             return self.value_re.match(other[1])
 
