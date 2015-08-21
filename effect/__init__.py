@@ -9,11 +9,12 @@ See https://effect.readthedocs.org/ for documentation.
 
 from __future__ import absolute_import
 
-from ._base import Effect, perform, NoPerformerFoundError, catch
+from ._base import Effect, async_perform, NoPerformerFoundError, catch
 from ._sync import (
     NotSynchronousError,
     sync_perform,
-    sync_performer)
+    sync_performer,
+    perform)
 from ._intents import (
     Delay, ParallelEffects, parallel, parallel_all_errors,
     Constant, Error, FirstError, Func,

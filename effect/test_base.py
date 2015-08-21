@@ -6,7 +6,7 @@ import traceback
 from testtools import TestCase
 from testtools.matchers import MatchesException, MatchesListwise
 
-from ._base import Effect, NoPerformerFoundError, catch, perform
+from . import Effect, NoPerformerFoundError, catch, perform
 from ._test_utils import raise_
 
 

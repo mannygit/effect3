@@ -7,12 +7,31 @@ Tools for dealing with Effects synchronously.
 import six
 import sys
 
-from ._base import perform
+from ._base import async_perform
 from ._utils import wraps
 
 
 class NotSynchronousError(Exception):
     """Performing an effect did not immediately return a value."""
+
+
+def _perform(dispatcher, effect):
+    successes = []
+    errors = []
+    effect = effect.on(success=successes.append, error=errors.append)
+    async_perform(dispatcher, effect)
+    if successes:
+        return ("success", successes[0])
+    elif errors:
+        six.reraise(*errors[0])
+
+
+def perform(dispatcher, effect):
+    r = _perform(dispatcher, effect)
+    if r is None:
+        return None
+    else:
+        return r[1]
 
 
 def sync_perform(dispatcher, effect):
@@ -24,17 +43,12 @@ def sync_perform(dispatcher, effect):
     callbacks) be synchronous. If the result is not available immediately,
     :class:`NotSynchronousError` will be raised.
     """
-    successes = []
-    errors = []
-    effect = effect.on(success=successes.append, error=errors.append)
-    perform(dispatcher, effect)
-    if successes:
-        return successes[0]
-    elif errors:
-        six.reraise(*errors[0])
-    else:
+    result = _perform(dispatcher, effect)
+    if result is None:
         raise NotSynchronousError("Performing %r was not synchronous!"
                                   % (effect,))
+    else:
+        return result[1]
 
 
 def sync_performer(f):

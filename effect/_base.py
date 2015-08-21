@@ -52,18 +52,26 @@ class _Box(object):
         """
         :param callable cont: Called with (bool is_error, result)
         """
+        self.called = False
         self._cont = cont
 
     def succeed(self, result):
         """
         Indicate that the effect has succeeded, and the result is available.
         """
+        if self.called:
+            print("WHOAH, WHAT?", self.called, "WHILE", result)
+        self.called = (False, result)
         self._cont((False, result))
 
     def fail(self, result):
         """
         Indicate that the effect has failed. result must be an exc_info tuple.
         """
+        if self.called:
+            print("(Fail) WHOAH, WHAT?", self.called, "WHILE", result)
+            #import pdb; pdb.set_trace()
+        self.called = (True, result)
         self._cont((True, result))
 
 
@@ -84,7 +92,7 @@ class NoPerformerFoundError(Exception):
     """Raised when a performer for an intent couldn't be found."""
 
 
-def perform(dispatcher, effect):
+def async_perform(dispatcher, effect):
     """
     Perform an effect and invoke callbacks bound to it.
 
@@ -148,6 +156,7 @@ def perform(dispatcher, effect):
         bouncer.bounce(_run_callbacks, chain, result)
 
     def _perform(bouncer, effect):
+        print("here's a _perform bouncer", bouncer, effect)
         try:
             performer = dispatcher(effect.intent)
             if performer is None:
@@ -160,7 +169,8 @@ def perform(dispatcher, effect):
                                  _run_callbacks, effect.callbacks)))
         except:
             e = sys.exc_info()
-            _run_callbacks(bouncer, effect.callbacks, (True, e))
+            bouncer.bounce(_run_callbacks, effect.callbacks, (True, e))
+            #_run_callbacks(bouncer, effect.callbacks, (True, e))
 
     trampoline(_perform, effect)
 

@@ -3,7 +3,7 @@
 from functools import partial
 from itertools import count
 
-from ._base import perform
+from . import perform
 from ._intents import FirstError
 
 
@@ -25,9 +25,16 @@ def perform_parallel_async(dispatcher, intent, box):
     def succeed(index, result):
         results[index] = result
         if next(num_results) + 1 == len(effects):
+            print "********* PARALLEL succeeding", box, result
             box.succeed(results)
 
+    failed = []
     def fail(index, result):
+        print "********* PARALLEL failing", box, result
+        # if failed:
+        #     return
+        # else:
+        #     failed.append(True)
         box.fail((FirstError,
                   FirstError(exc_info=result, index=index),
                   result[2]))
