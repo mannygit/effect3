@@ -7,13 +7,12 @@ python:
     - "3.5"
     - "pypy"
 install:
-    - pip install .
-    - pip install -r dev-requirements.txt
-    - pip install sphinx sphinx_rtd_theme
+    - pip install pipenv
+    - pipenv sync -d
 script:
-    - make lint
-    - py.test
-    - make doc
+    - pipenv run make lint
+    - pipenv run py.test
+    - pipenv run make doc
 
 notifications:
   irc:
