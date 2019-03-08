@@ -1,5 +1,5 @@
-from . import Effect, sync_perform
-from .io import Display, Prompt, stdio_dispatcher
+from effect import Effect, sync_perform
+from effect.io import Display, Prompt, stdio_dispatcher
 
 
 def test_perform_display_print(capsys):

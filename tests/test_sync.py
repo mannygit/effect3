@@ -3,8 +3,8 @@ from functools import partial
 from testtools import TestCase
 from testtools.matchers import MatchesException, raises
 
-from ._base import Effect
-from ._sync import NotSynchronousError, sync_perform, sync_performer
+from effect._base import Effect
+from effect._sync import NotSynchronousError, sync_perform, sync_performer
 
 
 def func_dispatcher(intent):

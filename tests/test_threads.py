@@ -6,9 +6,9 @@ from multiprocessing.pool import ThreadPool
 
 from testtools import TestCase
 
-from ._intents import ParallelEffects, base_dispatcher
-from ._dispatcher import ComposedDispatcher, TypeDispatcher
-from .threads import perform_parallel_with_pool
+from effect._intents import ParallelEffects, base_dispatcher
+from effect._dispatcher import ComposedDispatcher, TypeDispatcher
+from effect.threads import perform_parallel_with_pool
 from .test_parallel_performers import ParallelPerformerTestsMixin
 
 

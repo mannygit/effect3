@@ -1,6 +1,6 @@
 from testtools import TestCase
 
-from ._dispatcher import TypeDispatcher, ComposedDispatcher
+from effect._dispatcher import TypeDispatcher, ComposedDispatcher
 
 
 class Foo(object):

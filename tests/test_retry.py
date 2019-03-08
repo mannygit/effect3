@@ -1,9 +1,9 @@
 from testtools import TestCase
 from testtools.matchers import raises
 
-from .retry import retry
-from . import base_dispatcher
-from .testing import ESConstant, ESError, ESFunc, resolve_stubs
+from effect.retry import retry
+from effect import base_dispatcher
+from effect.testing import ESConstant, ESError, ESFunc, resolve_stubs
 
 
 class RetryTests(TestCase):

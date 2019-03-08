@@ -2,10 +2,10 @@ from __future__ import print_function
 
 from testtools.testcase import TestCase
 
-from ._base import Effect, perform
-from ._dispatcher import ComposedDispatcher, TypeDispatcher
-from ._intents import ParallelEffects, base_dispatcher, parallel
-from .parallel_async import perform_parallel_async
+from effect._base import Effect, perform
+from effect._dispatcher import ComposedDispatcher, TypeDispatcher
+from effect._intents import ParallelEffects, base_dispatcher, parallel
+from effect.parallel_async import perform_parallel_async
 from .test_base import func_dispatcher
 from .test_parallel_performers import ParallelPerformerTestsMixin
 

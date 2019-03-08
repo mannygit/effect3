@@ -6,9 +6,9 @@ import six
 
 from testtools.matchers import MatchesStructure, Equals
 
-from . import Effect
-from ._intents import Constant, Func, FirstError, parallel
-from ._sync import sync_perform
+from effect import Effect
+from effect._intents import Constant, Func, FirstError, parallel
+from effect._sync import sync_perform
 from ._test_utils import MatchesReraisedExcInfo, get_exc_info
 
 

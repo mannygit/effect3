@@ -1,8 +1,8 @@
 from testtools import TestCase
 
-from ._base import Effect
-from ._sync import sync_perform
-from .ref import (
+from effect._base import Effect
+from effect._sync import sync_perform
+from effect.ref import (
     Reference, ModifyReference, ReadReference,
     reference_dispatcher)
 

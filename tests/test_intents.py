@@ -9,9 +9,9 @@ from testtools.matchers import Equals, MatchesListwise
 
 from pytest import raises
 
-from ._base import Effect
-from ._dispatcher import ComposedDispatcher, TypeDispatcher
-from ._intents import (
+from effect._base import Effect
+from effect._dispatcher import ComposedDispatcher, TypeDispatcher
+from effect._intents import (
     base_dispatcher,
     Constant, perform_constant,
     Delay, perform_delay_with_sleep,
@@ -19,9 +19,9 @@ from ._intents import (
     Func, perform_func,
     FirstError,
     ParallelEffects, parallel_all_errors)
-from ._sync import sync_perform
+from effect._sync import sync_perform
 from ._test_utils import MatchesReraisedExcInfo, get_exc_info
-from .parallel_async import perform_parallel_async
+from effect.parallel_async import perform_parallel_async
 from .test_parallel_performers import EquitableException
 
 

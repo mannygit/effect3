@@ -10,7 +10,7 @@ from testtools import TestCase
 from testtools.matchers import (MatchesListwise, Equals, MatchesException,
                                 raises)
 
-from . import (
+from effect import (
     ComposedDispatcher,
     Constant,
     Effect,
@@ -18,9 +18,9 @@ from . import (
     parallel,
     sync_perform,
     sync_performer)
-from .do import do, do_return
-from .fold import FoldError, sequence
-from .testing import (
+from effect.do import do, do_return
+from effect.fold import FoldError, sequence
+from effect.testing import (
     _ANY,
     ESConstant,
     ESError,
