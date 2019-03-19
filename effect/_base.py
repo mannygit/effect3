@@ -2,8 +2,10 @@
 from __future__ import print_function, absolute_import
 
 import sys
+from dataclasses import dataclass
 
 from functools import partial
+from typing import Generic, TypeVar, Sequence, Tuple, Any, Callable
 
 import attr
 
@@ -12,8 +14,12 @@ import six
 from ._continuation import trampoline
 
 
-@attr.s
-class Effect(object):
+T = TypeVar('T')
+S = TypeVar('S')
+
+
+@dataclass(frozen=True)
+class Effect(Generic[T, S]):
     """
     Take an object that describes a desired effect (called an "Intent"), and
     allow binding callbacks to be called with the result of the effect.
@@ -23,10 +29,10 @@ class Effect(object):
     :param intent: The intent to be performed.
     """
 
-    intent = attr.ib()
-    callbacks = attr.ib(default=attr.Factory(list))
+    intent: T
+    callbacks: Tuple = ()
 
-    def on(self, success=None, error=None):
+    def on(self, success: Callable[[S], Any] = None, error=None) -> 'Effect':
         """
         Return a new Effect with the given success and/or error callbacks
         bound.
@@ -41,7 +47,7 @@ class Effect(object):
         :obj:`Effect` will be passed to the next callback.
         """
         return Effect(self.intent,
-                      callbacks=self.callbacks + [(success, error)])
+                      callbacks=self.callbacks + ((success, error), ))
 
 
 class _Box(object):

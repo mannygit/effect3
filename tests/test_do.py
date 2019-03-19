@@ -147,6 +147,7 @@ def test_repeatable_effect():
         yield do_return(x)
     eff = f()
     assert perf(eff) == 'foo'
+    # noinspection PyStatementEffect
     perf(eff) == 'foo'
 
 
@@ -170,7 +171,6 @@ def test_stop_iteration_only_local():
             perf(eff)
 
 
-@mark.skipif(not six.PY3, reason="Testing a Py3-specific feature")
 def test_py3_return():
     """The `return x` syntax in Py3 sets the result of the Effect to `x`."""
     from ._test_do_py3 import py3_generator_with_return
